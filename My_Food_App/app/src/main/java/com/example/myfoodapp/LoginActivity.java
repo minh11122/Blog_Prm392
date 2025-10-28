@@ -33,4 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this, ForgotPassActivity.class));
         finish();
     }
+
+    public void mainActivity(View view) {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
+    }
 }

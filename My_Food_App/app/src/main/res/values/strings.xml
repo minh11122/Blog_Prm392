@@ -21,4 +21,11 @@
     <string name="have_account">Have Account ?</string>
     <string name="sent_new_password">Sent new password</string>
     <string name="back">Back</string>
+    <string name="daily_meal">Daily Meal</string>
+    <string name="favourite">Favourite</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="my_cart">My Cart</string>
+    <string name="s_t_c">S T C</string>
+    <string name="myfood_gmail_com">myfood@gmail.com</string>
 </resources>
