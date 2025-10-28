@@ -19,4 +19,6 @@
     <string name="password">Password</string>
     <string name="already_registered">Already Registered ?</string>
     <string name="have_account">Have Account ?</string>
+    <string name="sent_new_password">Sent new password</string>
+    <string name="back">Back</string>
 </resources>
