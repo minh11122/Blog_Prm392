@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFoodApp">
         <activity
-            android:name=".ForgotPassActivity"
+            android:name=".activities.ForgotPassActivity"
             android:exported="false" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
