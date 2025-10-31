@@ -1,4 +1,4 @@
-package com.example.myfoodapp;
+package com.example.myfoodapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.myfoodapp.activities.LoginActivity;
+import com.example.myfoodapp.R;
 
 public class ForgotPassActivity extends AppCompatActivity {
 
