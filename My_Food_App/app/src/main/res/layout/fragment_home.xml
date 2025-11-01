@@ -13,19 +13,19 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:autofillHints="noAutofill"
-            android:inputType="text"
             android:id="@+id/editText"
             android:layout_width="300dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_margin="6dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:autofillHints="noAutofill"
             android:background="@drawable/search_bg"
             android:drawableRight="@drawable/baseline_search_24"
             android:drawablePadding="9dp"
             android:fontFamily="@font/amita"
             android:hint="Search your food"
+            android:inputType="text"
             android:padding="10dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -36,6 +36,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/search_bg"
             android:padding="10dp"
             android:src="@drawable/baseline_person_24"
@@ -48,7 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="184dp"
             android:fontFamily="@font/amarante"
             android:text="Hello Hius"
             android:textColor="@color/white"
@@ -57,6 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/editText" />
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
@@ -65,6 +68,17 @@
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_hor_rec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
