@@ -28,4 +28,11 @@
     <string name="my_cart">My Cart</string>
     <string name="s_t_c">S T C</string>
     <string name="myfood_gmail_com">myfood@gmail.com</string>
+    <string name="_10_10_23_00">10:10 - 23:00</string>
+    <string name="todo">TODO</string>
+    <string name="_5_0">5.0</string>
+    <string name="todo1">TODO</string>
+    <string name="product_name">Product Name</string>
+    <string name="min_45">Min - $45</string>
+    <string name="imagefood">imagefood</string>
 </resources>
