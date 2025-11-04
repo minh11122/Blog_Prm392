@@ -35,4 +35,7 @@
     <string name="product_name">Product Name</string>
     <string name="min_45">Min - $45</string>
     <string name="imagefood">imagefood</string>
+    <string name="your_favourite_and_testy_food_is_here">your favourite and testy food is here</string>
+    <string name="view_more">view more</string>
+    <string name="_10_weekend_delicious_ndinner_recipes">10 weekend Delicious \nDinner Recipes</string>
 </resources>
