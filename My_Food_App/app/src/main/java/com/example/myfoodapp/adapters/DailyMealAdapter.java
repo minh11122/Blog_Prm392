@@ -1,6 +1,7 @@
 package com.example.myfoodapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfoodapp.R;
+import com.example.myfoodapp.activities.DetailedDailyMealActivity;
 import com.example.myfoodapp.models.DailyMealModel;
 
 import java.util.List;
@@ -33,12 +35,20 @@ public class DailyMealAdapter extends RecyclerView.Adapter<DailyMealAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DailyMealModel meal = list.get(position);
 
-        holder.imageView.setImageResource(meal.getImage());
-        holder.name.setText(meal.getName());
-        holder.discount.setText(meal.getDiscount());
-        holder.description.setText(meal.getDescription());
+        holder.imageView.setImageResource(list.get(position).getImage());
+        holder.name.setText(list.get(position).getName());
+        holder.discount.setText(list.get(position).getDiscount());
+        holder.description.setText(list.get(position).getDescription());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailedDailyMealActivity.class);
+                intent.putExtra( "type", list.get(position).getType());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

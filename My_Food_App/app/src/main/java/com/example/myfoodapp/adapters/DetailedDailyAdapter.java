@@ -53,8 +53,8 @@ public class DetailedDailyAdapter extends RecyclerView.Adapter<DetailedDailyAdap
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.detailed_img);
-            price = itemView.findViewById(R.id.detailed_price);
-            name = itemView.findViewById(R.id.detailed_name);
+            price = itemView.findViewById(R.id.detailed_name);
+            name = itemView.findViewById(R.id.detailed_price);
             description = itemView.findViewById(R.id.detailed_des);
             rating = itemView.findViewById(R.id.detailed_rating);
             timing = itemView.findViewById(R.id.detailed_timing);
