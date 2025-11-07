@@ -11,23 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFoodApp">
-        <activity android:name=".activities.ForgotPassActivity"/>
+
+        <activity android:name=".activities.ForgotPassActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.WelcomeActivity">
-        </activity>
-        <activity android:name=".activities.DetailedDailyMealActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.WelcomeActivity"
             android:exported="true"
-            android:label="My Food App"
             android:theme="@style/Theme.MyFoodApp.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <activity android:name=".activities.DetailedDailyMealActivity" />
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

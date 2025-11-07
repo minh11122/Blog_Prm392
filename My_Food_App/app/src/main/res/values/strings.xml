@@ -17,6 +17,8 @@
     <string name="full_name">Full Name</string>
     <string name="email">Email Address</string>
     <string name="password">Password</string>
+    <string name="phone">Phone</string>
+    <string name="your_address">Your Address</string>
     <string name="already_registered">Already Registered ?</string>
     <string name="have_account">Have Account ?</string>
     <string name="sent_new_password">Sent new password</string>

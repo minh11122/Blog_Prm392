@@ -3,27 +3,73 @@ package com.example.myfoodapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myfoodapp.MainActivity;
 import com.example.myfoodapp.R;
+import com.example.myfoodapp.controller.userController;
 
 public class LoginActivity extends AppCompatActivity {
+
+    EditText etEmail, etPassword;
+    Button btnLogin;
+    userController controller;
+
+    private boolean validateInputs() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email không hợp lệ!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (password.length() < 6) {
+            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+
+        controller = new userController(this);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!validateInputs()) return;
+
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+
+                boolean isLoggedIn = controller.loginUser(email, password);
+                if (isLoggedIn) {
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 
@@ -34,11 +80,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void link_to_forgot_password(View view) {
         startActivity(new Intent(LoginActivity.this, ForgotPassActivity.class));
-        finish();
-    }
-
-    public void mainActivity(View view) {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
 }
