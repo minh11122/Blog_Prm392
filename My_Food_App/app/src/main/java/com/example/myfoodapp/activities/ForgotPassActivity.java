@@ -3,26 +3,58 @@ package com.example.myfoodapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myfoodapp.R;
+import com.example.myfoodapp.controller.userController;
 
 public class ForgotPassActivity extends AppCompatActivity {
+
+    private EditText etEmail;
+    private Button btnSend;
+    private userController userController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_forgot_pass);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        etEmail = findViewById(R.id.etEmail);
+        btnSend = findViewById(R.id.btnSend);
+        userController = new userController(this);
+
+        btnSend.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập email!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String newPassword = userController.resetPassword(email);
+            if (newPassword != null) {
+                // Hiển thị mật khẩu bằng AlertDialog
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Mật khẩu mới của bạn")
+                        .setMessage("Mật khẩu mới là:\n\n" + newPassword)
+                        .setPositiveButton("Sao chép", (dialog, which) -> {
+                            android.content.ClipboardManager clipboard =
+                                    (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            android.content.ClipData clip =
+                                    android.content.ClipData.newPlainText("new_password", newPassword);
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(this, "Đã sao chép mật khẩu!", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Đóng", (dialog, which) -> dialog.dismiss())
+                        .show();
+
+            } else {
+                Toast.makeText(this, "Email không tồn tại!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
