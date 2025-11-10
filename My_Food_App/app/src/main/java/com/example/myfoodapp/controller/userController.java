@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.myfoodapp.database.DatabaseHelper;
-import com.example.myfoodapp.models.userModel;
+import com.example.myfoodapp.models.RoleModel;
+import com.example.myfoodapp.models.UserModel;
 
 public class userController {
 
@@ -28,7 +29,7 @@ public class userController {
     }
 
     // REGISTER
-    public boolean registerUser(userModel user) {
+    public boolean registerUser(UserModel user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_USERS + " WHERE email = ?", new String[]{user.getEmail()});
@@ -38,12 +39,17 @@ public class userController {
             return false; // email đã tồn tại
         }
 
+        // Gán role mặc định là Customer
+        RoleModel customerRole = new RoleModel(2, "Customer");
+        user.setRole(customerRole);
+
         ContentValues values = new ContentValues();
         values.put("name", user.getName());
         values.put("email", user.getEmail());
         values.put("password", user.getPassword());
         values.put("phone", user.getPhone());
         values.put("address", user.getAddress());
+        values.put("role_id", user.getRole().getId()); // lưu role_id vào DB
 
         long result = db.insert(DatabaseHelper.TABLE_USERS, null, values);
         cursor.close();
@@ -53,20 +59,29 @@ public class userController {
     }
 
     // LOGIN
-    public userModel loginUser(String email, String password) {
+    public UserModel loginUser(String email, String password) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String query = "SELECT * FROM " + DatabaseHelper.TABLE_USERS + " WHERE email = ? AND password = ?";
+        // Lấy thêm role_id từ DB
+        String query = "SELECT u.*, r.name AS role_name " +
+                "FROM " + DatabaseHelper.TABLE_USERS + " u " +
+                "LEFT JOIN roles r ON u.role_id = r.id " +
+                "WHERE email = ? AND password = ?";
         Cursor cursor = db.rawQuery(query, new String[]{email, password});
 
-        userModel user = null;
+        UserModel user = null;
         if (cursor.moveToFirst()) {
-            user = new userModel();
+            user = new UserModel();
             user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
             user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
             user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
             user.setPhone(cursor.getString(cursor.getColumnIndexOrThrow("phone")));
             user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+
+            // Set role
+            int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("role_id"));
+            String roleName = cursor.getString(cursor.getColumnIndexOrThrow("role_name"));
+            user.setRole(new RoleModel(roleId, roleName));
         }
 
         cursor.close();

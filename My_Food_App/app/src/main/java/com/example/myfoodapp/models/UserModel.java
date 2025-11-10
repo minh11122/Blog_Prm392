@@ -1,23 +1,26 @@
 package com.example.myfoodapp.models;
+import com.example.myfoodapp.models.RoleModel;
 
-public class userModel {
+public class UserModel {
     private int id;
     private String name;
     private String email;
     private String password;
     private String phone;
     private String address;
+    private RoleModel role;
 
-    public userModel() {
+    public UserModel() {
     }
 
-    public userModel(int id, String name, String email, String password, String phone, String address) {
+    public UserModel(int id, String name, String email, String password, String phone, String address, RoleModel role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.role = role;
     }
 
     public int getId() {
@@ -66,5 +69,13 @@ public class userModel {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public RoleModel getRole() {
+        return role;
+    }
+
+    public void setRole(RoleModel role) {
+        this.role = role;
     }
 }

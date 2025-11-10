@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // ĐẶT TÊN TABLE
     public static final String TABLE_USERS = "users";
+    public static final String TABLE_ROLE = "roles";
 
     // --- Bảng CATEGORIES (cho list ngang) ---
     public static final String TABLE_CATEGORIES = "categories";
@@ -104,14 +105,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //CREATE USER TABLE
+        String createRoleTable = "CREATE TABLE " + TABLE_ROLE + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT UNIQUE NOT NULL)";
+        db.execSQL(createRoleTable);
+        // Thêm role
+        ContentValues roleAdmin = new ContentValues();
+        roleAdmin.put("id", 1);
+        roleAdmin.put("name", "Admin");
+        db.insert(TABLE_ROLE, null, roleAdmin);
+
+        ContentValues roleCustomer = new ContentValues();
+        roleCustomer.put("id", 2);
+        roleCustomer.put("name", "Customer");
+        db.insert(TABLE_ROLE, null, roleCustomer);
+
         String createUsersTable = "CREATE TABLE " + TABLE_USERS + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
                 "email TEXT UNIQUE, " +
                 "password TEXT, " +
                 "phone TEXT, " +
-                "address TEXT)";
+                "address TEXT, " +
+                "role_id INTEGER, " +
+                "FOREIGN KEY(role_id) REFERENCES role(id))";
         db.execSQL(createUsersTable);
+        // Thêm admin
+        ContentValues admin = new ContentValues();
+        admin.put("name", "Admin");
+        admin.put("email", "admin@gmail.com");
+        admin.put("password", "123456");
+        admin.put("phone", "0123456789");
+        admin.put("address", "Admin Address");
+        admin.put("role_id", 1);
+        db.insert(TABLE_USERS, null, admin);
 
         String createTableCategories = "CREATE TABLE " + TABLE_CATEGORIES + " (" +
                 COL_CAT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
