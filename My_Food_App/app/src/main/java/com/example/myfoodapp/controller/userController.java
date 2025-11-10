@@ -156,6 +156,38 @@ public class userController {
         return roles;
     }
 
+    public UserModel getUserById(int userId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT u.*, r.name AS role_name FROM " + DatabaseHelper.TABLE_USERS + " u " +
+                "LEFT JOIN " + DatabaseHelper.TABLE_ROLE + " r ON u.role_id = r.id WHERE u.id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        UserModel user = null;
+        if (cursor.moveToFirst()) {
+            user = new UserModel();
+            user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+            user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+            user.setPhone(cursor.getString(cursor.getColumnIndexOrThrow("phone")));
+            user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+            int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("role_id"));
+            String roleName = cursor.getString(cursor.getColumnIndexOrThrow("role_name"));
+            user.setRole(new RoleModel(roleId, roleName));
+        }
+        cursor.close();
+        db.close();
+        return user;
+    }
+
+    public boolean updateUserContact(int userId, String phone, String address) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("phone", phone);
+        values.put("address", address);
+        int rows = db.update(DatabaseHelper.TABLE_USERS, values, "id = ?", new String[]{String.valueOf(userId)});
+        db.close();
+        return rows > 0;
+    }
+
     // RESET PASSWORD
     public String resetPassword(String email) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

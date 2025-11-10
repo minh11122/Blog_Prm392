@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_daily_meal,
                 R.id.nav_favourite,
                 R.id.nav_my_cart,
-                R.id.nav_order_history)
+                R.id.nav_order_history,
+                R.id.nav_user_profile)
                 .setOpenableLayout(drawerLayout)
                 .build();
 

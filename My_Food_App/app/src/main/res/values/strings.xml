@@ -82,4 +82,11 @@
     <string name="edit_food">Edit Food</string>
     <string name="unknown_user">Unknown user</string>
     <string name="logout">Log out</string>
+    <string name="user_profile">Profile</string>
+    <string name="phone_number">Phone number</string>
+    <string name="address_label">Address</string>
+    <string name="update_profile">Update profile</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="profile_update_failed">Unable to update profile</string>
+    <string name="profile_not_logged_in">Please login to view profile</string>
 </resources>
