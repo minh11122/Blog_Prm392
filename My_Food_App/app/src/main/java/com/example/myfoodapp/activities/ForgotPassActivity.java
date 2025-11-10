@@ -37,21 +37,8 @@ public class ForgotPassActivity extends AppCompatActivity {
 
             String newPassword = userController.resetPassword(email);
             if (newPassword != null) {
-                // Hiển thị mật khẩu bằng AlertDialog
-                new androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setTitle("Mật khẩu mới của bạn")
-                        .setMessage("Mật khẩu mới là:\n\n" + newPassword)
-                        .setPositiveButton("Sao chép", (dialog, which) -> {
-                            android.content.ClipboardManager clipboard =
-                                    (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                            android.content.ClipData clip =
-                                    android.content.ClipData.newPlainText("new_password", newPassword);
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(this, "Đã sao chép mật khẩu!", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("Đóng", (dialog, which) -> dialog.dismiss())
-                        .show();
-
+                // Hiển thị mật khẩu mới bằng Toast
+                Toast.makeText(this, "Mật khẩu mới của bạn đã được gửi ", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Email không tồn tại!", Toast.LENGTH_SHORT).show();
             }
