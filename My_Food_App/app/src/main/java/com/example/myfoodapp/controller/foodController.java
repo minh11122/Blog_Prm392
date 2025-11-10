@@ -1,6 +1,7 @@
 package com.example.myfoodapp.controller; // Package controller mới
 
 import android.content.Context;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -105,5 +106,51 @@ public class foodController {
         cursor.close();
         db.close();
         return list;
+    }
+    // Lấy danh sách món ăn yêu thích
+    public ArrayList<HomeVerModel> getFavoriteFoods() {
+        ArrayList<HomeVerModel> list = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Lọc những món có is_favorite = 1
+        String selection = "is_favorite = ?";
+        String[] selectionArgs = {"1"};
+
+        Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUCTS,
+                null,
+                selection,
+                selectionArgs,
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_ID));
+                int image = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_IMAGE));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_NAME));
+                String timing = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_TIMING));
+                String rating = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_RATING));
+                String price = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_PRICE));
+
+                HomeVerModel product = new HomeVerModel(id, image, name, timing, rating, price);
+                product.setFavorite(true); // chắc chắn là món yêu thích
+                list.add(product);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return list;
+    }
+    // Thêm vào class foodController
+    public void updateFavorite(int productId, int isFavorite) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("is_favorite", isFavorite); // Cột is_favorite trong bảng sản phẩm
+
+        String whereClause = DatabaseHelper.COL_PROD_ID + " = ?";
+        String[] whereArgs = {String.valueOf(productId)};
+
+        db.update(DatabaseHelper.TABLE_PRODUCTS, values, whereClause, whereArgs);
+        db.close();
     }
 }

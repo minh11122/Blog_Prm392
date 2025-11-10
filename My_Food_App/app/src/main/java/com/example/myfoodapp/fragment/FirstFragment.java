@@ -50,7 +50,7 @@ public class FirstFragment extends Fragment implements UpdateVerticalRec {
         // Lấy danh sách sản phẩm của category đầu tiên
         if (!categories.isEmpty()) {
             ArrayList<HomeVerModel> products = foodController.getProductsByCategory(categories.get(0).getId());
-            verAdapter = new HomeVerAdapter(getContext(), products);
+            verAdapter = new HomeVerAdapter(getContext(), products, foodController);
             verRecyclerView.setAdapter(verAdapter);
         }
 
@@ -59,7 +59,7 @@ public class FirstFragment extends Fragment implements UpdateVerticalRec {
 
     @Override
     public void callBack(int position, ArrayList<HomeVerModel> list) {
-        verAdapter = new HomeVerAdapter(getContext(), list);
+        verAdapter = new HomeVerAdapter(getContext(), list, foodController); // <--- Thêm controller
         verRecyclerView.setAdapter(verAdapter);
     }
 }

@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements UpdateVerticalRec {
             homeVerModelList = new ArrayList<>();
         }
 
-        homeVerAdapter = new HomeVerAdapter(getActivity(), homeVerModelList);
+        homeVerAdapter = new HomeVerAdapter(getActivity(), homeVerModelList, foodController);
         homeVerticalRec.setAdapter(homeVerAdapter);
         homeVerticalRec.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
 
@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements UpdateVerticalRec {
     @Override
     public void callBack(int position, ArrayList<HomeVerModel> list) {
 
-        homeVerAdapter = new HomeVerAdapter(getContext(), list);
+        homeVerAdapter = new HomeVerAdapter(getContext(), list, foodController);
         homeVerAdapter.notifyDataSetChanged();
         homeVerticalRec.setAdapter(homeVerAdapter);
     }

@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myfoodapp.R;
 import com.example.myfoodapp.adapters.HomeVerAdapter;
 import com.example.myfoodapp.models.HomeVerModel;
-import com.example.myfoodapp.controller.FoodDAO;
+import com.example.myfoodapp.controller.foodController;
+
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class FavouriteFragment extends Fragment {
     private RecyclerView favoriteRecycler;
     private LinearLayout emptyLayout;
     private HomeVerAdapter adapter;
-    private FoodDAO foodDAO;
+    private foodController foodController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,11 +37,11 @@ public class FavouriteFragment extends Fragment {
 
         favoriteRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        foodDAO = new FoodDAO(getContext());
-        ArrayList<HomeVerModel> favoriteList = foodDAO.getFavoriteFoods(); // Bỏ comment & định nghĩa biến
+        foodController = new foodController(getContext());
+        ArrayList<HomeVerModel> favoriteList = foodController.getFavoriteFoods();
 
         if (favoriteList != null && !favoriteList.isEmpty()) {
-            adapter = new HomeVerAdapter(getContext(), favoriteList, foodDAO); // truyền DAO
+            adapter = new HomeVerAdapter(getContext(), favoriteList, foodController);
             favoriteRecycler.setAdapter(adapter);
             emptyLayout.setVisibility(View.GONE);
         } else {
@@ -50,4 +51,5 @@ public class FavouriteFragment extends Fragment {
         return root;
     }
 }
+
 
