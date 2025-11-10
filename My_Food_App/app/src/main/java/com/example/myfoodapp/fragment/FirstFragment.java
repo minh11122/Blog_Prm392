@@ -1,5 +1,6 @@
 package com.example.myfoodapp.fragment;
 
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,68 +12,55 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myfoodapp.R;
-import com.example.myfoodapp.adapters.FeaturedAdapter;
-import com.example.myfoodapp.adapters.FeaturedVerAdapter;
-import com.example.myfoodapp.models.FeaturedModel;
-import com.example.myfoodapp.models.FeaturedVerModel;
+import com.example.myfoodapp.adapters.HomeHorAdapter;
+import com.example.myfoodapp.adapters.HomeVerAdapter;
+import com.example.myfoodapp.adapters.UpdateVerticalRec;
+import com.example.myfoodapp.controller.foodController;
+
+import com.example.myfoodapp.models.HomeHorModel;
+import com.example.myfoodapp.models.HomeVerModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
+public class FirstFragment extends Fragment implements UpdateVerticalRec {
 
-public class FirstFragment extends Fragment {
-    /// //////////////////////////Featured Hor RecyclerView
-    List<FeaturedModel> featuredModelList;
-    RecyclerView recyclerView;
-    FeaturedAdapter featuredAdapter;
-
-    /// //////////////////////////Featured Ver RecyclerView
-    List<FeaturedVerModel> featuredVerModelsList;
-    RecyclerView recyclerView2;
-    FeaturedVerAdapter featuredVerAdapter;
-
-    public FirstFragment() {
-        // Required empty public constructor
-    }
-
+    RecyclerView horRecyclerView, verRecyclerView;
+    HomeHorAdapter horAdapter;
+    HomeVerAdapter verAdapter;
+    foodController foodController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
 
+        horRecyclerView = view.findViewById(R.id.featured_hor_rec);
+        verRecyclerView = view.findViewById(R.id.featured_ver_rec);
 
-        /// //////////////////////////Featured Hor RecyclerView
+        horRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        verRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
-        recyclerView = view.findViewById(R.id.featured_hor_rec);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-        featuredModelList = new ArrayList<>();
+       foodController = new foodController(getContext());
 
-        featuredModelList.add(new FeaturedModel(R.drawable.fav1,"Featured 1","Description 1"));
-        featuredModelList.add(new FeaturedModel(R.drawable.fav3,"Featured 2","Description 2"));
-        featuredModelList.add(new FeaturedModel(R.drawable.fav2,"Featured 3","Description 3"));
+        // Lấy danh sách category
+        ArrayList<HomeHorModel> categories = foodController.getAllCategories();
+        horAdapter = new HomeHorAdapter(this, getActivity(), categories);
+        horRecyclerView.setAdapter(horAdapter);
 
-        featuredAdapter = new FeaturedAdapter(featuredModelList);
-        recyclerView.setAdapter(featuredAdapter);
+        // Lấy danh sách sản phẩm của category đầu tiên
+        if (!categories.isEmpty()) {
+            ArrayList<HomeVerModel> products = foodController.getProductsByCategory(categories.get(0).getId());
+            verAdapter = new HomeVerAdapter(getContext(), products, foodController);
+            verRecyclerView.setAdapter(verAdapter);
+        }
 
+        return view;
+    }
 
-        /// //////////////////////////Featured Ver RecyclerView
-
-        recyclerView2 = view.findViewById(R.id.featured_ver_rec);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
-        featuredVerModelsList = new ArrayList<>();
-
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver1,"Featured 1","Description 1","4,8","10:00-8:00"));
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver2,"Featured 2","Description 2","4,8","10:00-8:00"));
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver3,"Featured 3","Description 3","4,8","10:00-8:00"));
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver1,"Featured 1","Description 1","4,8","10:00-8:00"));
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver2,"Featured 2","Description 2","4,8","10:00-8:00"));
-        featuredVerModelsList.add(new FeaturedVerModel(R.drawable.ver3,"Featured 3","Description 3","4,8","10:00-8:00"));
-
-        featuredVerAdapter = new FeaturedVerAdapter(featuredVerModelsList);
-        recyclerView2.setAdapter(featuredVerAdapter);
-
-       return view;
+    @Override
+    public void callBack(int position, ArrayList<HomeVerModel> list) {
+        verAdapter = new HomeVerAdapter(getContext(), list, foodController); // <--- Thêm controller
+        verRecyclerView.setAdapter(verAdapter);
     }
 }
+

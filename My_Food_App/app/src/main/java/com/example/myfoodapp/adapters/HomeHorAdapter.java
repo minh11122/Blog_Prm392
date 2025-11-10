@@ -32,6 +32,7 @@ public class HomeHorAdapter extends RecyclerView.Adapter<HomeHorAdapter.ViewHold
         this.activity = activity;
         this.list = list;
         this.foodController = new foodController(activity); // Khởi tạo DB
+
     }
 
     @NonNull

@@ -12,76 +12,92 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfoodapp.R;
+import com.example.myfoodapp.controller.foodController;
 import com.example.myfoodapp.models.HomeVerModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHolder> {
 
     private BottomSheetDialog bottomSheetDialog;
-    Context context;
-    ArrayList<HomeVerModel> list;
+    private Context context;
+    private ArrayList<HomeVerModel> list;
+    private foodController foodController;
 
-    public HomeVerAdapter(Context context, ArrayList<HomeVerModel> list) {
+    public HomeVerAdapter(Context context, ArrayList<HomeVerModel> list, foodController controller) {
         this.context = context;
         this.list = list;
+        this.foodController = controller;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_vertical_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.home_vertical_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final String mName = list.get(position).getName();
-        final String mTiming = list.get(position).getTiming();
-        final String mRating = list.get(position).getRating();
-        final String mPrice = list.get(position).getPrice();
+        HomeVerModel item = list.get(position);
 
-        final int mImage = list.get(position).getImage();
+        holder.imageView.setImageResource(item.getImage());
+        holder.name.setText(item.getName());
+        holder.timing.setText(item.getTiming());
+        holder.rating.setText(item.getRating());
+        holder.price.setText(item.getPrice());
 
-//        HomeVerModel item = list.get(position);
+        // Set trạng thái tim theo database
+        holder.isFavorite = item.isFavorite();
+        holder.ivFavorite.setImageResource(holder.isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart_border);
 
-        holder.imageView.setImageResource(list.get(position).getImage());
-        holder.name.setText(list.get(position).getName());
-        holder.timing.setText(list.get(position).getTiming());
-        holder.rating.setText(list.get(position).getRating());
-        holder.price.setText(list.get(position).getPrice());
+        // Xử lý click item để mở BottomSheet
+        holder.itemView.setOnClickListener(v -> {
+            bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetTheme);
+            View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout, null);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            sheetView.findViewById(R.id.add_to_cart).setOnClickListener(v1 -> {
+                Toast.makeText(context, "Added to Cart", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            });
 
-                bottomSheetDialog = new BottomSheetDialog(context,R.style.BottomSheetTheme);
+            ImageView bottomImg = sheetView.findViewById(R.id.bottom_img);
+            TextView bottomName = sheetView.findViewById(R.id.bottom_name);
+            TextView bottomPrice = sheetView.findViewById(R.id.bottom_price);
+            TextView bottomRating = sheetView.findViewById(R.id.bottom_rating);
 
-                View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout,  null);
-                sheetView.findViewById(R.id.add_to_cart).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, "Added to a Cart", Toast.LENGTH_SHORT).show();
-                        bottomSheetDialog.dismiss();
-                    }
-                });
+            bottomName.setText(item.getName());
+            bottomPrice.setText(item.getPrice());
+            bottomRating.setText(item.getRating());
+            bottomImg.setImageResource(item.getImage());
 
-                ImageView bottomImg = sheetView.findViewById(R.id.bottom_img);
-                TextView bottomName=  sheetView.findViewById(R.id.bottom_name);
-                TextView bottomPrice =sheetView.findViewById(R.id.bottom_price);
-                TextView bottomRating = sheetView.findViewById(R.id.bottom_rating);
-
-                bottomName.setText(mName);
-                bottomPrice.setText(mPrice);
-                bottomRating.setText(mRating);
-                bottomImg.setImageResource(mImage);
-
-                bottomSheetDialog.setContentView(sheetView);
-                bottomSheetDialog.show();
-            }
+            bottomSheetDialog.setContentView(sheetView);
+            bottomSheetDialog.show();
         });
 
+        // Xử lý click tim
+        holder.ivFavorite.setOnClickListener(v -> {
+            holder.isFavorite = !holder.isFavorite;
+            holder.ivFavorite.setImageResource(holder.isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart_border);
+
+            // Cập nhật database thông qua foodController
+            foodController.updateFavorite(item.getId(), holder.isFavorite ? 1 : 0);
+            item.setFavorite(holder.isFavorite);
+
+            Toast.makeText(context,
+                    holder.isFavorite ? "Đã thêm vào yêu thích ❤️" : "Đã bỏ khỏi yêu thích 🤍",
+                    Toast.LENGTH_SHORT).show();
+
+            // Hiệu ứng tim
+            holder.ivFavorite.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(150)
+                    .withEndAction(() ->
+                            holder.ivFavorite.animate().scaleX(1f).scaleY(1f).setDuration(100))
+                    .start();
+        });
     }
 
     @Override
@@ -90,9 +106,9 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView imageView;
+        ImageView imageView, ivFavorite;
         TextView name, timing, rating, price;
+        boolean isFavorite = false;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +117,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
             timing = itemView.findViewById(R.id.timing);
             rating = itemView.findViewById(R.id.rating);
             price = itemView.findViewById(R.id.price);
+            ivFavorite = itemView.findViewById(R.id.iv_favorite);
         }
     }
 }

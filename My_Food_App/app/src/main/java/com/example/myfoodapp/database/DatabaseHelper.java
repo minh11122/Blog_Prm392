@@ -129,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_PROD_RATING + " TEXT, " +
                 COL_PROD_PRICE + " TEXT, " +
                 COL_PROD_CATEGORY_ID + " INTEGER, " + // Khóa ngoại
+                "is_favorite INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(" + COL_PROD_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORIES + "(" + COL_CAT_ID + "))";
         db.execSQL(createTableProducts);
         addInitialData(db);
