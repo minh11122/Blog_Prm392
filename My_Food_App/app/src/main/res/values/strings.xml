@@ -43,4 +43,6 @@
     <string name="make_order">Make Order</string>
     <string name="my_cart1">My Cart</string>
     <string name="favorite_icon">Favorite icon</string>
+    <string name="cart_empty_state">Your cart is empty</string>
+    <string name="added_to_cart">Added to cart</string>
 </resources>

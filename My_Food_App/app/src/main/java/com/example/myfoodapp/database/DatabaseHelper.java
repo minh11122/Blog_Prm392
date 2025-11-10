@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myfoodapp.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // ĐẶT TÊN TABLE
     public static final String TABLE_USERS = "users";
@@ -37,6 +37,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PROD_PRICE = "price";
     public static final String COL_PROD_CATEGORY_ID = "category_id";
 
+
+
+    // --- Bảng CART ITEMS ---
+    public static final String TABLE_CART = "cart_items";
+    public static final String COL_CART_ID = "id";
+    public static final String COL_CART_PRODUCT_ID = "product_id";
+    public static final String COL_CART_NAME = "name";
+    public static final String COL_CART_IMAGE = "image_resource_id";
+    public static final String COL_CART_RATING = "rating";
+    public static final String COL_CART_PRICE_TEXT = "price_display";
+    public static final String COL_CART_UNIT_PRICE = "unit_price";
+    public static final String COL_CART_QUANTITY = "quantity";
 
 
     public DatabaseHelper(Context context) {
@@ -159,6 +171,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "is_favorite INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(" + COL_PROD_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORIES + "(" + COL_CAT_ID + "))";
         db.execSQL(createTableProducts);
+        // Bảng CartItems
+        String createTableCartItems = "CREATE TABLE " + TABLE_CART + " (" +
+                COL_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_CART_PRODUCT_ID + " INTEGER UNIQUE, " +
+                COL_CART_NAME + " TEXT, " +
+                COL_CART_IMAGE + " INTEGER, " +
+                COL_CART_RATING + " TEXT, " +
+                COL_CART_PRICE_TEXT + " TEXT, " +
+                COL_CART_UNIT_PRICE + " REAL, " +
+                COL_CART_QUANTITY + " INTEGER DEFAULT 1)";
+        db.execSQL(createTableCartItems);
+
         addInitialData(db);
     }
 
@@ -169,6 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
         onCreate(db);
     }
 }

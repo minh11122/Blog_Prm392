@@ -1,47 +1,59 @@
 package com.example.myfoodapp.models;
 
 public class CartModel {
-    int images;
-    String name;
-    String price;
-    String rating;
+    private final int id;
+    private final int productId;
+    private final int images;
+    private final String name;
+    private final String price;
+    private final String rating;
+    private final int quantity;
+    private final double unitPrice;
 
-    public CartModel(int images, String name, String price, String rating) {
+    public CartModel(int id, int productId, int images, String name, String price, String rating, int quantity, double unitPrice) {
+        this.id = id;
+        this.productId = productId;
         this.images = images;
         this.name = name;
         this.price = price;
         this.rating = rating;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getProductId() {
+        return productId;
     }
 
     public int getImages() {
         return images;
     }
 
-    public void setImages(int images) {
-        this.images = images;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public String getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public double getTotalPrice() {
+        return unitPrice * quantity;
     }
 }

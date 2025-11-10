@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.myfoodapp.database.DatabaseHelper; // Import DatabaseHelper
+import com.example.myfoodapp.models.CartModel;
 import com.example.myfoodapp.models.HomeHorModel;
 import com.example.myfoodapp.models.HomeVerModel;
 
@@ -152,5 +153,112 @@ public class foodController {
 
         db.update(DatabaseHelper.TABLE_PRODUCTS, values, whereClause, whereArgs);
         db.close();
+    }
+
+    // ---------- CART ----------
+
+    public void addProductToCart(HomeVerModel product) {
+        if (product == null) return;
+
+        double unitPrice = extractUnitPrice(product.getPrice());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+        Cursor cursor = null;
+        try {
+            String selection = DatabaseHelper.COL_CART_PRODUCT_ID + " = ?";
+            String[] selectionArgs = {String.valueOf(product.getId())};
+            cursor = db.query(DatabaseHelper.TABLE_CART,
+                    new String[]{DatabaseHelper.COL_CART_ID, DatabaseHelper.COL_CART_QUANTITY},
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null);
+
+            if (cursor.moveToFirst()) {
+                int cartId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_ID));
+                int currentQty = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_QUANTITY));
+
+                ContentValues updateValues = new ContentValues();
+                updateValues.put(DatabaseHelper.COL_CART_QUANTITY, currentQty + 1);
+
+                db.update(DatabaseHelper.TABLE_CART,
+                        updateValues,
+                        DatabaseHelper.COL_CART_ID + " = ?",
+                        new String[]{String.valueOf(cartId)});
+            } else {
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.COL_CART_PRODUCT_ID, product.getId());
+                values.put(DatabaseHelper.COL_CART_NAME, product.getName());
+                values.put(DatabaseHelper.COL_CART_IMAGE, product.getImage());
+                values.put(DatabaseHelper.COL_CART_RATING, product.getRating());
+                values.put(DatabaseHelper.COL_CART_PRICE_TEXT, product.getPrice());
+                values.put(DatabaseHelper.COL_CART_UNIT_PRICE, unitPrice);
+                values.put(DatabaseHelper.COL_CART_QUANTITY, 1);
+
+                db.insert(DatabaseHelper.TABLE_CART, null, values);
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    public ArrayList<CartModel> getCartItems() {
+        ArrayList<CartModel> list = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(DatabaseHelper.TABLE_CART,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_ID));
+                int productId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_PRODUCT_ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_NAME));
+                int image = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_IMAGE));
+                String rating = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_RATING));
+                String priceDisplay = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_PRICE_TEXT));
+                double unitPrice = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_UNIT_PRICE));
+                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CART_QUANTITY));
+
+                list.add(new CartModel(id, productId, image, name, priceDisplay, rating, quantity, unitPrice));
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return list;
+    }
+
+    public void clearCart() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_CART, null, null);
+        db.close();
+    }
+
+    private double extractUnitPrice(String priceText) {
+        if (priceText == null) return 0;
+        String sanitized = priceText.replaceAll("[^0-9.]", "");
+        if (sanitized.isEmpty()) {
+            return 0;
+        }
+        try {
+            return Double.parseDouble(sanitized);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

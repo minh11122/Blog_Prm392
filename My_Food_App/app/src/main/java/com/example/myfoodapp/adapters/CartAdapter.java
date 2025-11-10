@@ -1,6 +1,5 @@
 package com.example.myfoodapp.adapters;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myfoodapp.models.CartModel;
 import com.example.myfoodapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
 
-    List<CartModel> list;
+    private final List<CartModel> list;
 
     public CartAdapter(List<CartModel> list) {
-        this.list = list;
+        this.list = list != null ? list : new ArrayList<>();
     }
 
     @NonNull
@@ -32,10 +32,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageResource(list.get(position).getImages());
-        holder.name.setText(list.get(position).getName());
-        holder.rating.setText(list.get(position).getRating());
-        holder.price.setText(list.get(position).getPrice());
+        CartModel cartItem = list.get(position);
+        holder.imageView.setImageResource(cartItem.getImages());
+        holder.name.setText(cartItem.getName());
+        holder.rating.setText(cartItem.getRating());
+        holder.price.setText(cartItem.getPrice());
+        holder.quantity.setText("x" + cartItem.getQuantity());
     }
 
     @Override
@@ -43,9 +45,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return list.size();
     }
 
+    public void updateData(List<CartModel> newItems) {
+        list.clear();
+        if (newItems != null) {
+            list.addAll(newItems);
+        }
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        TextView name,rating,price;
+        TextView name,rating,price,quantity;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -54,6 +64,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             name = itemView.findViewById(R.id.detailed_name);
             rating = itemView.findViewById(R.id.detailed_rating);
             price = itemView.findViewById(R.id.textView8);
+            quantity = itemView.findViewById(R.id.detailed_quantity);
         }
     }
 }
