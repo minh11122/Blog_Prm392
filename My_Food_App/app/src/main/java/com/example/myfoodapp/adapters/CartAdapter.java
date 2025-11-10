@@ -3,17 +3,19 @@ package com.example.myfoodapp.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfoodapp.models.CartModel;
 import com.example.myfoodapp.R;
+import com.example.myfoodapp.models.CartModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
@@ -32,20 +34,28 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mycart_item,parent,false));
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.mycart_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CartModel cartItem = list.get(position);
-        holder.imageView.setImageResource(cartItem.getImages());
-        holder.name.setText(cartItem.getName());
-        holder.rating.setText(cartItem.getRating());
-        holder.price.setText(cartItem.getPrice());
-        holder.quantity.setText("x" + cartItem.getQuantity());
+        CartModel item = list.get(position);
+
+        holder.imageView.setImageResource(item.getImages());
+        holder.name.setText(item.getName());
+        holder.rating.setText(item.getRating());
+        holder.quantity.setText("x" + item.getQuantity());
+
+        // HIỂN THỊ TỔNG TIỀN = đơn giá × số lượng
+        double totalPrice = item.getUnitPrice() * item.getQuantity();
+        holder.price.setText(String.format(Locale.getDefault(), "$%.2f", totalPrice));
+
+        // NÚT XÓA (ImageButton)
         holder.removeButton.setOnClickListener(v -> {
             if (actionListener != null) {
-                actionListener.onRemove(cartItem);
+                actionListener.onRemove(item);
             }
         });
     }
@@ -63,20 +73,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    // VIEW HOLDER
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name,rating,price,quantity;
-        View removeButton;
+        TextView name, rating, price, quantity;
+        ImageButton removeButton; // ĐÚNG KIỂU
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.detailed_img);
             name = itemView.findViewById(R.id.detailed_name);
             rating = itemView.findViewById(R.id.detailed_rating);
-            price = itemView.findViewById(R.id.textView8);
+            price = itemView.findViewById(R.id.textView8); // TỔNG TIỀN
             quantity = itemView.findViewById(R.id.detailed_quantity);
-            removeButton = itemView.findViewById(R.id.cart_item_remove);
+            removeButton = itemView.findViewById(R.id.cart_item_remove); // ImageButton
         }
     }
 }

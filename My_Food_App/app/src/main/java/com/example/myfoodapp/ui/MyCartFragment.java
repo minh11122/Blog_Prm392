@@ -76,7 +76,7 @@ public class MyCartFragment extends Fragment {
     private void updateTotal(List<CartModel> cartItems) {
         double total = 0;
         for (CartModel item : cartItems) {
-            total += item.getTotalPrice();
+            total += item.getTotalPrice(); // ĐÃ CÓ TRONG CartModel
         }
 
         if (totalAmountText != null) {
