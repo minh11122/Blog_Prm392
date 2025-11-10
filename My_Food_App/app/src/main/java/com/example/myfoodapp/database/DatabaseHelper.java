@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myfoodapp.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // ĐẶT TÊN TABLE
     public static final String TABLE_USERS = "users";
@@ -49,6 +49,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_CART_PRICE_TEXT = "price_display";
     public static final String COL_CART_UNIT_PRICE = "unit_price";
     public static final String COL_CART_QUANTITY = "quantity";
+
+    // --- Orders ---
+    public static final String TABLE_ORDERS = "orders";
+    public static final String COL_ORDER_ID = "id";
+    public static final String COL_ORDER_USER_ID = "user_id";
+    public static final String COL_ORDER_TOTAL = "total_amount";
+    public static final String COL_ORDER_STATUS = "status";
+    public static final String COL_ORDER_CREATED_AT = "created_at";
+
+    public static final String TABLE_ORDER_ITEMS = "order_items";
+    public static final String COL_ORDER_ITEM_ID = "id";
+    public static final String COL_ORDER_ITEM_ORDER_ID = "order_id";
+    public static final String COL_ORDER_ITEM_PRODUCT_ID = "product_id";
+    public static final String COL_ORDER_ITEM_NAME = "product_name";
+    public static final String COL_ORDER_ITEM_PRICE = "price";
+    public static final String COL_ORDER_ITEM_QUANTITY = "quantity";
 
 
     public DatabaseHelper(Context context) {
@@ -183,6 +199,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_CART_QUANTITY + " INTEGER DEFAULT 1)";
         db.execSQL(createTableCartItems);
 
+        // Bảng Orders
+        String createOrdersTable = "CREATE TABLE " + TABLE_ORDERS + " (" +
+                COL_ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_ORDER_USER_ID + " INTEGER, " +
+                COL_ORDER_TOTAL + " REAL, " +
+                COL_ORDER_STATUS + " TEXT, " +
+                COL_ORDER_CREATED_AT + " INTEGER, " +
+                "FOREIGN KEY(" + COL_ORDER_USER_ID + ") REFERENCES " + TABLE_USERS + "(id))";
+        db.execSQL(createOrdersTable);
+
+        // Bảng Order items
+        String createOrderItemsTable = "CREATE TABLE " + TABLE_ORDER_ITEMS + " (" +
+                COL_ORDER_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_ORDER_ITEM_ORDER_ID + " INTEGER, " +
+                COL_ORDER_ITEM_PRODUCT_ID + " INTEGER, " +
+                COL_ORDER_ITEM_NAME + " TEXT, " +
+                COL_ORDER_ITEM_PRICE + " REAL, " +
+                COL_ORDER_ITEM_QUANTITY + " INTEGER, " +
+                "FOREIGN KEY(" + COL_ORDER_ITEM_ORDER_ID + ") REFERENCES " + TABLE_ORDERS + "(" + COL_ORDER_ID + "))";
+        db.execSQL(createOrderItemsTable);
+
         addInitialData(db);
     }
 
@@ -195,6 +232,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROLE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER_ITEMS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDERS);
         onCreate(db);
     }
 }

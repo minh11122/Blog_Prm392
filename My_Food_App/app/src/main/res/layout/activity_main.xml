@@ -24,17 +24,5 @@
         app:menu="@menu/activity_main_drawer"
         android:background="@color/gray"
         app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white">
-        
-        <Button
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Log Out"
-            android:layout_gravity="bottom"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:padding="15dp"
-            />
-    </com.google.android.material.navigation.NavigationView>
+        app:itemTextColor="@color/white"/>
 </androidx.drawerlayout.widget.DrawerLayout>

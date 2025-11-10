@@ -1,5 +1,7 @@
 package com.example.myfoodapp.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ public class MyCartFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView totalAmountText;
     private TextView emptyCartText;
+    private Button makeOrderButton;
     private foodController controller;
 
     public MyCartFragment() {
@@ -48,6 +52,7 @@ public class MyCartFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         totalAmountText = view.findViewById(R.id.total_amount);
         emptyCartText = view.findViewById(R.id.empty_cart_text);
+        makeOrderButton = view.findViewById(R.id.buttonRegister);
 
         cartAdapter = new CartAdapter(list, cartItem -> {
             controller.deleteCartItem(cartItem.getId());
@@ -55,6 +60,8 @@ public class MyCartFragment extends Fragment {
             loadCartItems();
         });
         recyclerView.setAdapter(cartAdapter);
+
+        makeOrderButton.setOnClickListener(v -> createOrder());
 
         loadCartItems();
         return view;
@@ -91,5 +98,25 @@ public class MyCartFragment extends Fragment {
 
         recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         emptyCartText.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (makeOrderButton != null) {
+            makeOrderButton.setEnabled(!isEmpty);
+        }
+    }
+
+    private void createOrder() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
+        if (userId == -1) {
+            Toast.makeText(requireContext(), R.string.order_requires_login, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        long orderId = controller.placeOrder(userId);
+        if (orderId > 0) {
+            Toast.makeText(requireContext(), R.string.order_created_success, Toast.LENGTH_SHORT).show();
+            loadCartItems();
+        } else {
+            Toast.makeText(requireContext(), R.string.order_created_fail, Toast.LENGTH_SHORT).show();
+        }
     }
 }

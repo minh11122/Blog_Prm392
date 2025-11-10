@@ -8,7 +8,7 @@ public class HomeVerModel {
     private String timing;
     private String rating;
     private String price;
-
+    private int categoryId;
     private boolean isFavorite = false; // trạng thái yêu thích
 
     // Constructor mặc định
@@ -42,6 +42,9 @@ public class HomeVerModel {
 
     public String getPrice() { return price; }
     public void setPrice(String price) { this.price = price; }
+
+    public int getCategoryId() { return categoryId; }
+    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
 
     public boolean isFavorite() { return isFavorite; }
     public void setFavorite(boolean favorite) { this.isFavorite = favorite; }

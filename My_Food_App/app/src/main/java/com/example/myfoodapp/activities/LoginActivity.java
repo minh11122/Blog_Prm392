@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent;
                     if ("Admin".equalsIgnoreCase(user.getRole().getName())) {
-                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                     } else {
                         intent = new Intent(LoginActivity.this, MainActivity.class);
                     }

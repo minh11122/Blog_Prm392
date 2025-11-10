@@ -9,6 +9,8 @@ import com.example.myfoodapp.database.DatabaseHelper;
 import com.example.myfoodapp.models.RoleModel;
 import com.example.myfoodapp.models.UserModel;
 
+import java.util.ArrayList;
+
 public class userController {
 
     private final DatabaseHelper dbHelper;
@@ -39,9 +41,10 @@ public class userController {
             return false; // email đã tồn tại
         }
 
-        // Gán role mặc định là Customer
-        RoleModel customerRole = new RoleModel(2, "Customer");
-        user.setRole(customerRole);
+        if (user.getRole() == null) {
+            RoleModel customerRole = new RoleModel(2, "Customer");
+            user.setRole(customerRole);
+        }
 
         ContentValues values = new ContentValues();
         values.put("name", user.getName());
@@ -87,6 +90,70 @@ public class userController {
         cursor.close();
         db.close();
         return user;
+    }
+
+    public ArrayList<UserModel> getAllUsers() {
+        ArrayList<UserModel> users = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT u.*, r.name AS role_name FROM " + DatabaseHelper.TABLE_USERS + " u " +
+                "LEFT JOIN " + DatabaseHelper.TABLE_ROLE + " r ON u.role_id = r.id";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                UserModel user = new UserModel();
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+                user.setPhone(cursor.getString(cursor.getColumnIndexOrThrow("phone")));
+                user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+                int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("role_id"));
+                String roleName = cursor.getString(cursor.getColumnIndexOrThrow("role_name"));
+                user.setRole(new RoleModel(roleId, roleName));
+                users.add(user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return users;
+    }
+
+    public boolean deleteUser(int userId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rows = db.delete(DatabaseHelper.TABLE_USERS, "id = ?", new String[]{String.valueOf(userId)});
+        db.close();
+        return rows > 0;
+    }
+
+    public boolean updateUser(UserModel user) {
+        if (user == null || user.getRole() == null) {
+            return false;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", user.getName());
+        values.put("email", user.getEmail());
+        values.put("phone", user.getPhone());
+        values.put("address", user.getAddress());
+        values.put("role_id", user.getRole().getId());
+        int rows = db.update(DatabaseHelper.TABLE_USERS, values, "id = ?", new String[]{String.valueOf(user.getId())});
+        db.close();
+        return rows > 0;
+    }
+
+    public ArrayList<RoleModel> getAllRoles() {
+        ArrayList<RoleModel> roles = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DatabaseHelper.TABLE_ROLE, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                roles.add(new RoleModel(id, name));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return roles;
     }
 
     // RESET PASSWORD

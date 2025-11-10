@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".activities.AdminDashboardActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/admin_dashboard_title"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/amita"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btn_manage_users"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_users"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btn_manage_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_orders"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btn_manage_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_categories"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btn_manage_foods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_foods"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btn_go_customer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/open_customer_app"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/input_food_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/product_name"/>
+
+        <EditText
+            android:id="@+id/input_food_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/min_45"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/input_food_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/_5_0"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/input_food_timing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/_10_10_23_00"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/input_food_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/image_resource_hint"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/input_food_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+</ScrollView>
