@@ -1,6 +1,8 @@
 package com.example.myfoodapp.models;
 
 public class DetailedDailyModel {
+
+    int id;
     int image;
     String name;
     String description;
@@ -8,13 +10,26 @@ public class DetailedDailyModel {
     String price;
     String timing;
 
-    public DetailedDailyModel(int image, String name, String description, String rating, String price, String timing) {
+    public DetailedDailyModel() {
+    }
+
+    public DetailedDailyModel(int id, int image, String name, String description, String rating, String price, String timing) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.description = description;
         this.rating = rating;
         this.price = price;
         this.timing = timing;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getImage() {
@@ -41,20 +56,20 @@ public class DetailedDailyModel {
         this.description = description;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public String getRating() {
         return rating;
     }
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getTiming() {

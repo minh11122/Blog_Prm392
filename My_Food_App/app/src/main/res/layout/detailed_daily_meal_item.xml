@@ -109,6 +109,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/btn_add_to_cart"
                     android:layout_width="97dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
