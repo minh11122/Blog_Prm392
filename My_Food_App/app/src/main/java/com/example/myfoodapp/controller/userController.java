@@ -31,7 +31,6 @@ public class userController {
     public boolean registerUser(userModel user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Kiểm tra email trùng
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_USERS + " WHERE email = ?", new String[]{user.getEmail()});
         if (cursor.getCount() > 0) {
             cursor.close();
@@ -54,35 +53,40 @@ public class userController {
     }
 
     // LOGIN
-    public boolean loginUser(String email, String password) {
+    public userModel loginUser(String email, String password) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query = "SELECT * FROM " + DatabaseHelper.TABLE_USERS + " WHERE email = ? AND password = ?";
         Cursor cursor = db.rawQuery(query, new String[]{email, password});
 
-        boolean isLoggedIn = cursor.moveToFirst();
+        userModel user = null;
+        if (cursor.moveToFirst()) {
+            user = new userModel();
+            user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+            user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+            user.setPhone(cursor.getString(cursor.getColumnIndexOrThrow("phone")));
+            user.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("address")));
+        }
 
         cursor.close();
         db.close();
-        return isLoggedIn;
+        return user;
     }
 
     // RESET PASSWORD
     public String resetPassword(String email) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Kiểm tra xem email có tồn tại không
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_USERS + " WHERE email = ?", new String[]{email});
         if (cursor.getCount() == 0) {
             cursor.close();
             db.close();
-            return null; // không có email
+            return null;
         }
 
-        // Sinh mật khẩu mới (ngẫu nhiên)
         String newPassword = generateRandomPassword(8);
 
-        // Cập nhật mật khẩu mới vào DB
         ContentValues values = new ContentValues();
         values.put("password", newPassword);
         db.update(DatabaseHelper.TABLE_USERS, values, "email = ?", new String[]{email});
@@ -90,7 +94,14 @@ public class userController {
         cursor.close();
         db.close();
 
-        return newPassword; // trả về mật khẩu mới
-    }
+        // Gửi email thông báo mật khẩu mới
+        new Thread(() -> {
+            String subject = "Khôi phục mật khẩu - MyFoodApp";
+            String body = "Xin chào,\n\nMật khẩu mới của bạn là: " + newPassword +
+                    "\n\nVui lòng đăng nhập và thay đổi lại mật khẩu ngay sau khi đăng nhập.\n\nCảm ơn bạn đã sử dụng MyFoodApp!";
+            com.example.myfoodapp.utils.MailSender.sendEmail(email, subject, body);
+        }).start();
 
+        return newPassword;
+    }
 }

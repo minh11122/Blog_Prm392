@@ -1,6 +1,7 @@
 package com.example.myfoodapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myfoodapp.MainActivity;
 import com.example.myfoodapp.R;
 import com.example.myfoodapp.controller.userController;
+import com.example.myfoodapp.models.userModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +62,21 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
 
-                boolean isLoggedIn = controller.loginUser(email, password);
-                if (isLoggedIn) {
+                userModel user = controller.loginUser(email, password);
+
+                if (user != null) {
+                    // Lưu thông tin vào SharedPreferences
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    prefs.edit()
+                            .putInt("userId", user.getId())
+                            .putString("userName", user.getName())
+                            .apply();
+
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("userId", user.getId());
+                    intent.putExtra("userName", user.getName());
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
