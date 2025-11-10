@@ -17,11 +17,16 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
+    public interface CartActionListener {
+        void onRemove(CartModel cartModel);
+    }
 
     private final List<CartModel> list;
+    private final CartActionListener actionListener;
 
-    public CartAdapter(List<CartModel> list) {
+    public CartAdapter(List<CartModel> list, CartActionListener actionListener) {
         this.list = list != null ? list : new ArrayList<>();
+        this.actionListener = actionListener;
     }
 
     @NonNull
@@ -38,6 +43,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.rating.setText(cartItem.getRating());
         holder.price.setText(cartItem.getPrice());
         holder.quantity.setText("x" + cartItem.getQuantity());
+        holder.removeButton.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onRemove(cartItem);
+            }
+        });
     }
 
     @Override
@@ -56,6 +66,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView name,rating,price,quantity;
+        View removeButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +76,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             rating = itemView.findViewById(R.id.detailed_rating);
             price = itemView.findViewById(R.id.textView8);
             quantity = itemView.findViewById(R.id.detailed_quantity);
+            removeButton = itemView.findViewById(R.id.cart_item_remove);
         }
     }
 }

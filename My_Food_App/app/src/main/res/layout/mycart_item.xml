@@ -47,6 +47,17 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="4dp">
 
+                <ImageButton
+                    android:id="@+id/cart_item_remove"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/remove_from_cart"
+                    android:padding="4dp"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_marginTop="3dp"
@@ -95,7 +106,7 @@
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@+id/cart_item_remove" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myfoodapp.R;
 import com.example.myfoodapp.adapters.CartAdapter;
@@ -48,7 +49,11 @@ public class MyCartFragment extends Fragment {
         totalAmountText = view.findViewById(R.id.total_amount);
         emptyCartText = view.findViewById(R.id.empty_cart_text);
 
-        cartAdapter = new CartAdapter(list);
+        cartAdapter = new CartAdapter(list, cartItem -> {
+            controller.deleteCartItem(cartItem.getId());
+            Toast.makeText(requireContext(), R.string.cart_item_removed, Toast.LENGTH_SHORT).show();
+            loadCartItems();
+        });
         recyclerView.setAdapter(cartAdapter);
 
         loadCartItems();

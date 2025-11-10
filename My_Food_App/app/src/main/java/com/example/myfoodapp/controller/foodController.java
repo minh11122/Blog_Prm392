@@ -249,6 +249,14 @@ public class foodController {
         db.close();
     }
 
+    public void deleteCartItem(int cartItemId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_CART,
+                DatabaseHelper.COL_CART_ID + " = ?",
+                new String[]{String.valueOf(cartItemId)});
+        db.close();
+    }
+
     private double extractUnitPrice(String priceText) {
         if (priceText == null) return 0;
         String sanitized = priceText.replaceAll("[^0-9.]", "");

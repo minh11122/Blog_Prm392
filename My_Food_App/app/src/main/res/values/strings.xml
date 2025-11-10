@@ -45,4 +45,6 @@
     <string name="favorite_icon">Favorite icon</string>
     <string name="cart_empty_state">Your cart is empty</string>
     <string name="added_to_cart">Added to cart</string>
+    <string name="remove_from_cart">Remove from cart</string>
+    <string name="cart_item_removed">Item removed from cart</string>
 </resources>
