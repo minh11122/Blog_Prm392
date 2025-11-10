@@ -65,5 +65,29 @@ public class DetailedDailyMealActivity extends AppCompatActivity {
             detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s3, "Sweet", "description", "4.4","40","10am to 9pm"));
             dailyAdapter.notifyDataSetChanged();
         }
+        if (type != null && type.equalsIgnoreCase("lunch")){
+            imageView.setImageResource(R.drawable.fav3);
+
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s1, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s2, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s3, "Sweet", "description", "4.4","40","10am to 9pm"));
+            dailyAdapter.notifyDataSetChanged();
+        }
+        if (type != null && type.equalsIgnoreCase("dinner")){
+            imageView.setImageResource(R.drawable.dinner);
+
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s1, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s2, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s3, "Sweet", "description", "4.4","40","10am to 9pm"));
+            dailyAdapter.notifyDataSetChanged();
+        }
+        if (type != null && type.equalsIgnoreCase("coffe")){
+            imageView.setImageResource(R.drawable.coffe);
+
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s1, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s2, "Sweet", "description", "4.4","40","10am to 9pm"));
+            detailedDailyModelList.add(new DetailedDailyModel(R.drawable.s3, "Sweet", "description", "4.4","40","10am to 9pm"));
+            dailyAdapter.notifyDataSetChanged();
+        }
     }
 }

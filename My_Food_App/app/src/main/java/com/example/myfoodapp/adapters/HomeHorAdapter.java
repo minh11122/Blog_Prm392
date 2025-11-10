@@ -57,7 +57,7 @@ public class HomeHorAdapter extends RecyclerView.Adapter<HomeHorAdapter.ViewHold
                     return;
                 }
 
-                row_index = currentPosition;pi
+                row_index = currentPosition;
                 notifyDataSetChanged();
 
                 // Lấy ID từ model
