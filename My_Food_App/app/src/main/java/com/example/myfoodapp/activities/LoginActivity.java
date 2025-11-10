@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myfoodapp.MainActivity;
 import com.example.myfoodapp.R;
 import com.example.myfoodapp.controller.userController;
-import com.example.myfoodapp.models.userModel;
+import com.example.myfoodapp.models.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -62,19 +62,25 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
 
-                userModel user = controller.loginUser(email, password);
+                UserModel user = controller.loginUser(email, password);
 
                 if (user != null) {
-                    // Lưu thông tin vào SharedPreferences
+                    // Lưu SharedPreferences
                     SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                     prefs.edit()
                             .putInt("userId", user.getId())
                             .putString("userName", user.getName())
+                            .putString("userRole", user.getRole().getName())
                             .apply();
 
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent;
+                    if ("Admin".equalsIgnoreCase(user.getRole().getName())) {
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                    } else {
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                    }
                     intent.putExtra("userId", user.getId());
                     intent.putExtra("userName", user.getName());
                     startActivity(intent);

@@ -12,7 +12,7 @@ import com.example.myfoodapp.MainActivity;
 import com.example.myfoodapp.R;
 
 import com.example.myfoodapp.controller.userController;
-import com.example.myfoodapp.models.userModel;
+import com.example.myfoodapp.models.UserModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!validateInputs()) return;
 
-                userModel user = new userModel();
+                UserModel user = new UserModel();
                 user.setName(etName.getText().toString().trim());
                 user.setEmail(etEmail.getText().toString().trim());
                 user.setPassword(etPassword.getText().toString().trim());
