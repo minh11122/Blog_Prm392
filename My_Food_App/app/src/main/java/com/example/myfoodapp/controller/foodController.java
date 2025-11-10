@@ -20,7 +20,6 @@ public class foodController {
     }
 
 
-
     // Hàm lấy  Categories
     public ArrayList<HomeHorModel> getAllCategories() {
         ArrayList<HomeHorModel> list = new ArrayList<>();
@@ -45,26 +44,31 @@ public class foodController {
     }
 
     // Hàm lấy Products theo Category ID
+    // Lấy Products theo Category ID
     public ArrayList<HomeVerModel> getProductsByCategory(int categoryId) {
         ArrayList<HomeVerModel> list = new ArrayList<>();
-
-
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String selection = DatabaseHelper.COL_PROD_CATEGORY_ID + " = ?";
-        String[] selectionArgs = { String.valueOf(categoryId) };
+        String[] selectionArgs = {String.valueOf(categoryId)};
 
         Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, null, selection, selectionArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_ID)); // lấy ID
                 int image = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_IMAGE));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_NAME));
                 String timing = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_TIMING));
                 String rating = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_RATING));
                 String price = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_PRICE));
 
-                list.add(new HomeVerModel(image, name, timing, rating, price));
+                HomeVerModel product = new HomeVerModel(id, image, name, timing, rating, price);
+                // Kiểm tra cột is_favorite nếu muốn đánh dấu
+                int fav = cursor.getInt(cursor.getColumnIndexOrThrow("is_favorite"));
+                product.setFavorite(fav == 1);
+
+                list.add(product);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -72,26 +76,30 @@ public class foodController {
         return list;
     }
 
-    //Hàm SEARCH
+    // SEARCH Products
     public ArrayList<HomeVerModel> searchProducts(String query) {
         ArrayList<HomeVerModel> list = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // Câu lệnh SQL: "SELECT * FROM products WHERE name LIKE '%query%'"
         String selection = DatabaseHelper.COL_PROD_NAME + " LIKE ?";
-        String[] selectionArgs = { "%" + query + "%" };
+        String[] selectionArgs = {"%" + query + "%"};
 
         Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, null, selection, selectionArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_ID));
                 int image = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_IMAGE));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_NAME));
                 String timing = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_TIMING));
                 String rating = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_RATING));
                 String price = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PROD_PRICE));
 
-                list.add(new HomeVerModel(image, name, timing, rating, price));
+                HomeVerModel product = new HomeVerModel(id, image, name, timing, rating, price);
+                int fav = cursor.getInt(cursor.getColumnIndexOrThrow("is_favorite"));
+                product.setFavorite(fav == 1);
+
+                list.add(product);
             } while (cursor.moveToNext());
         }
         cursor.close();

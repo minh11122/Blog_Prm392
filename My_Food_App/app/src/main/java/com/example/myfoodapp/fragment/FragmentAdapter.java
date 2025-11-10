@@ -6,6 +6,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+// Import các Fragment
+import com.example.myfoodapp.fragment.FirstFragment;
+import com.example.myfoodapp.fragment.SecondFragment;
+import com.example.myfoodapp.fragment.ThirdFragment;
+
 public class FragmentAdapter extends FragmentStateAdapter {
     public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
@@ -20,7 +25,6 @@ public class FragmentAdapter extends FragmentStateAdapter {
             case 2:
                 return new ThirdFragment();
         }
-
 
         return new FirstFragment();
     }

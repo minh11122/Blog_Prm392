@@ -93,6 +93,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
 
         ImageView imageView;
         TextView name, timing, rating, price;
+        
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

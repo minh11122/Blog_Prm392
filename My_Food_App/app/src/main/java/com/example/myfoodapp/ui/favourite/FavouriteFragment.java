@@ -4,71 +4,50 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfoodapp.R;
-import com.example.myfoodapp.fragment.FragmentAdapter;
-import com.google.android.material.tabs.TabLayout;
+import com.example.myfoodapp.adapters.HomeVerAdapter;
+import com.example.myfoodapp.models.HomeVerModel;
+import com.example.myfoodapp.controller.FoodDAO;
 
+import java.util.ArrayList;
 
 public class FavouriteFragment extends Fragment {
 
-    TabLayout tabLayout;
-    ViewPager2 viewPager2;
-    FragmentAdapter fragmentAdapter;
-    private FragmentActivity myContext;
+    private RecyclerView favoriteRecycler;
+    private LinearLayout emptyLayout;
+    private HomeVerAdapter adapter;
+    private FoodDAO foodDAO;
 
-
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        View root = inflater.inflate(R.layout.fragment_favourite, container, false);
 
+        favoriteRecycler = root.findViewById(R.id.favorite_recycler);
+        emptyLayout = root.findViewById(R.id.empty_layout);
 
-        View root = inflater.inflate(R.layout.fragment_favourite, container, false) ;
+        favoriteRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        tabLayout = root.findViewById(R.id.tab_layout);
-        viewPager2 = root.findViewById(R.id.view_pager2);
+        foodDAO = new FoodDAO(getContext());
+        ArrayList<HomeVerModel> favoriteList = foodDAO.getFavoriteFoods(); // Bỏ comment & định nghĩa biến
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragmentAdapter = new FragmentAdapter(fm,getLifecycle());
-
-        viewPager2.setAdapter(fragmentAdapter);
-
-        tabLayout.addTab(tabLayout.newTab().setText("Featured"));
-        tabLayout.addTab(tabLayout.newTab().setText("Popular"));
-        tabLayout.addTab(tabLayout.newTab().setText("New"));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                  viewPager2.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
-            }
-        });
+        if (favoriteList != null && !favoriteList.isEmpty()) {
+            adapter = new HomeVerAdapter(getContext(), favoriteList, foodDAO); // truyền DAO
+            favoriteRecycler.setAdapter(adapter);
+            emptyLayout.setVisibility(View.GONE);
+        } else {
+            emptyLayout.setVisibility(View.VISIBLE);
+        }
 
         return root;
     }
-
-
 }
+
